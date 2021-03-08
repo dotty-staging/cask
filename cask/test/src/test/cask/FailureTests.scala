@@ -12,7 +12,7 @@ object FailureTests extends TestSuite {
 
   val tests = Tests{
     "mismatchedDecorators" - {
-      val m = utest.compileError("""
+      val m = VersionSpecific.compileError("""
         object Decorated extends cask.MainRoutes{
           @myDecorator
           @cask.websocket("/hello/:world")
@@ -24,7 +24,7 @@ object FailureTests extends TestSuite {
     }
 
     "noEndpoint" - {
-      utest.compileError("""
+      VersionSpecific.compileError("""
         object Decorated extends cask.MainRoutes{
           @cask.get("/hello/:world")
           @myDecorator()
@@ -36,7 +36,7 @@ object FailureTests extends TestSuite {
       }
 
     "tooManyEndpoint" - {
-      utest.compileError("""
+      VersionSpecific.compileError("""
         object Decorated extends cask.MainRoutes{
           @cask.get("/hello/:world")
           @cask.get("/hello/:world")

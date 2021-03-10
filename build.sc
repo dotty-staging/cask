@@ -33,7 +33,7 @@ val dottyCustomVersion = Option(sys.props("dottyVersion"))
 trait CaskModule extends CrossScalaModule with PublishModule{
   def isDotty = crossScalaVersion.startsWith("3")
 
-  def publishVersion = build.publishVersion()._2
+  def publishVersion = "cb-SNAPSHOT" // hardcoded version for the community build
 
   def pomSettings = PomSettings(
     description = artifactName(),
@@ -51,7 +51,7 @@ class CaskMainModule(val crossScalaVersion: String) extends CaskModule {
   def ivyDeps = T{
     Agg(
       ivy"io.undertow:undertow-core:2.2.3.Final",
-      ivy"com.lihaoyi::upickle:1.2.3"
+      ivy"com.lihaoyi::upickle:cb-SNAPSHOT"
     ) ++
     (if(!isDotty) Agg(ivy"org.scala-lang:scala-reflect:${scalaVersion()}") else Agg())
   }
@@ -62,8 +62,8 @@ class CaskMainModule(val crossScalaVersion: String) extends CaskModule {
   object test extends Tests{
     def testFrameworks = Seq("utest.runner.Framework")
     def ivyDeps = Agg(
-      ivy"com.lihaoyi::utest::0.7.7",
-      ivy"com.lihaoyi::requests::0.6.5"
+      ivy"com.lihaoyi::utest::cb-SNAPSHOT",
+      ivy"com.lihaoyi::requests::cb-SNAPSHOT"
     )
   }
   def moduleDeps = Seq(cask.util.jvm(crossScalaVersion))
@@ -81,9 +81,9 @@ object cask extends Cross[CaskMainModule]((Seq(scala213, scala3) ++ dottyCustomV
         millSourcePath / s"src-$platformSegment"
       )
       def ivyDeps = Agg(
-        ivy"com.lihaoyi::sourcecode:0.2.3",
-        ivy"com.lihaoyi::pprint:0.6.1",
-        ivy"com.lihaoyi::geny:0.6.5"
+        ivy"com.lihaoyi::sourcecode:cb-SNAPSHOT",
+        ivy"com.lihaoyi::pprint:cb-SNAPSHOT",
+        ivy"com.lihaoyi::geny:cb-SNAPSHOT"
       )
     }
     class UtilJvmModule(val crossScalaVersion: String) extends UtilModule {
@@ -191,11 +191,11 @@ object example extends Module{
 
 }
 
-def publishVersion = T.input($file.ci.version.publishVersion)
+def publishVersion = "cb-SNAPSHOT" // hardcoded version for the community build
 def gitHead = T.input($file.ci.version.gitHead)
 
 def uploadToGithub(authKey: String) = T.command{
-  val (releaseTag, label) = publishVersion()
+  val (releaseTag, label) = $file.ci.version.publishVersion
 
   if (releaseTag == label){
     requests.post(

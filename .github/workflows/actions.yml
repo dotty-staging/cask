@@ -69,8 +69,8 @@ jobs:
           draft: false
 
   generate_docs:
-    if: github.repository == 'com-lihaoyi/cask' && contains(github.ref, 'refs/tags/')
-    needs: publish-sonatype
+    # if: github.repository == 'com-lihaoyi/cask' && contains(github.ref, 'refs/tags/')
+    # needs: publish-sonatype
     runs-on: ubuntu-20.04
     env:
       LANG: "en_US.UTF-8"
